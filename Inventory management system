@@ -68,67 +68,46 @@ class InventoryManagementUI:
         self.root = root
         self.root.title("Inventory Management System")
 
-        # Calculate screen width and height
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-
-        # Calculate window width and height
-        window_width = 600
-        window_height = 400
-
-        # Calculate position coordinates for centering the window
-        x_position = (screen_width // 2) - (window_width // 2)
-        y_position = (screen_height // 2) - (window_height // 2)
-
-        # Set window size and position
-        self.root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
-
         self.inventory_system = InventoryManagement()
 
         self.create_widgets()
 
     def create_widgets(self):
         # Labels and Entry fields
-        label_width = 15
-        entry_width = 35  # Increased width for Entry widgets
-
-        tk.Label(self.root, text="Product ID:", width=label_width).grid(row=0, column=0)
-        self.product_id_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Product ID:").grid(row=0, column=0)
+        self.product_id_entry = tk.Entry(self.root)
         self.product_id_entry.grid(row=0, column=1)
 
-        tk.Label(self.root, text="Product Name:", width=label_width).grid(row=1, column=0)
-        self.product_name_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Product Name:").grid(row=1, column=0)
+        self.product_name_entry = tk.Entry(self.root)
         self.product_name_entry.grid(row=1, column=1)
 
-        tk.Label(self.root, text="Initial Stock:", width=label_width).grid(row=2, column=0)
-        self.initial_stock_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Initial Stock:").grid(row=2, column=0)
+        self.initial_stock_entry = tk.Entry(self.root)
         self.initial_stock_entry.grid(row=2, column=1)
 
-        tk.Label(self.root, text="Reorder Point:", width=label_width).grid(row=3, column=0)
-        self.reorder_point_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Reorder Point:").grid(row=3, column=0)
+        self.reorder_point_entry = tk.Entry(self.root)
         self.reorder_point_entry.grid(row=3, column=1)
 
-        tk.Label(self.root, text="Lead Time (days):", width=label_width).grid(row=4, column=0)
-        self.lead_time_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Lead Time (days):").grid(row=4, column=0)
+        self.lead_time_entry = tk.Entry(self.root)
         self.lead_time_entry.grid(row=4, column=1)
 
-        tk.Label(self.root, text="Historical Sales (comma-separated):", width=label_width).grid(row=5, column=0)
-        self.historical_sales_entry = tk.Entry(self.root, width=entry_width)
+        tk.Label(self.root, text="Historical Sales (comma-separated):").grid(row=5, column=0)
+        self.historical_sales_entry = tk.Entry(self.root)
         self.historical_sales_entry.grid(row=5, column=1)
 
-        # Buttons with adjusted size and centered position
-        button_width = 15  # Smaller width for buttons
-        button_height = 2
+        # Buttons
+        tk.Button(self.root, text="Add Product", command=self.add_product).grid(row=6, column=0, columnspan=2, pady=10)
 
-        tk.Button(self.root, text="Add Product", command=self.add_product, width=button_width, height=button_height).grid(row=6, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="View Stock Levels", command=self.view_stock_levels).grid(row=7, column=0, columnspan=2, pady=10)
 
-        tk.Button(self.root, text="View Stock Levels", command=self.view_stock_levels, width=button_width, height=button_height).grid(row=7, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="View Reorder Alerts", command=self.view_reorder_alerts).grid(row=8, column=0, columnspan=2, pady=10)
 
-        tk.Button(self.root, text="View Reorder Alerts", command=self.view_reorder_alerts, width=button_width, height=button_height).grid(row=8, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="Generate Reports", command=self.generate_reports).grid(row=9, column=0, columnspan=2, pady=10)
 
-        tk.Button(self.root, text="Generate Reports", command=self.generate_reports, width=button_width, height=button_height).grid(row=9, column=0, columnspan=2, pady=10)
-
-        tk.Button(self.root, text="Exit", command=self.close_app, width=button_width, height=button_height).grid(row=10, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="Exit", command=self.close_app).grid(row=10, column=0, columnspan=2, pady=10)
 
     def close_app(self):
         if messagebox.askokcancel("Exit", "Do you want to exit the application?"):
@@ -154,7 +133,7 @@ class InventoryManagementUI:
         product_id = self.product_id_entry.get()
         stock_level = self.inventory_system.track_inventory(product_id)
         if stock_level is not None:
-            messagebox.showinfo("Stock Level", f"Current stock level for product {product_id}: {stock_level}", width=400)
+            messagebox.showinfo("Stock Level", f"Current stock level for product {product_id}: {stock_level}")
         else:
             messagebox.showerror("Error", "Product not found.")
 
@@ -162,9 +141,9 @@ class InventoryManagementUI:
         alerts = self.inventory_system.reorder_alerts()
         if alerts:
             alert_message = "\n".join(alerts)
-            messagebox.showinfo("Reorder Alerts", alert_message, width=400)
+            messagebox.showinfo("Reorder Alerts", alert_message)
         else:
-            messagebox.showinfo("Reorder Alerts", "No reorder alerts.", width=400)
+            messagebox.showinfo("Reorder Alerts", "No reorder alerts.")
 
     def generate_reports(self):
         turnover_rate, stockout_occurrences, overstock_costs = self.inventory_system.generate_reports()
@@ -174,8 +153,7 @@ class InventoryManagementUI:
         report_message += f"\nStockout Occurrences: {stockout_occurrences}\n"
         report_message += f"Overstock Costs: {overstock_costs}\n"
 
-        messagebox.showinfo("Reports", report_message, width=400)
-
+        messagebox.showinfo("Reports", report_message)
 
 def main():
     if not InventoryManagementUI._instance:
@@ -185,3 +163,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
