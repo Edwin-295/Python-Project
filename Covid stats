@@ -1,0 +1,51 @@
+import requests
+
+# Constants
+BASE_URL = 'https://disease.sh/v3/covid-19'
+
+def fetch_covid_data(region_type, region):
+    # Construct the API URL based on the region type
+    if region_type == 'country':
+        url = f"{BASE_URL}/countries/{region}"
+    elif region_type == 'state':
+        url = f"{BASE_URL}/states/{region}"
+    elif region_type == 'city':
+        url = f"{BASE_URL}/cities/{region}"
+    else:
+        raise ValueError("Invalid region type. Must be 'country', 'state', or 'city'.")
+    
+    # Make the GET request to the API
+    response = requests.get(url)
+    
+    # Check the response status code
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception("Error fetching data from the API")
+
+def display_covid_data(data):
+    # Extract relevant statistics
+    cases = data.get('cases', 'N/A')
+    recoveries = data.get('recovered', 'N/A')
+    deaths = data.get('deaths', 'N/A')
+
+    # Display the statistics
+    print(f"COVID-19 Statistics for {data.get('country', 'the specified region')}:")
+    print(f"Total Cases: {cases}")
+    print(f"Total Recoveries: {recoveries}")
+    print(f"Total Deaths: {deaths}")
+
+def main():
+    # Prompt the user to enter the region type and name
+    region_type = input("Enter the region type (country, state, city): ").strip().lower()
+    region = input(f"Enter the {region_type} name: ").strip()
+
+    try:
+        # Fetch and display the COVID-19 statistics
+        covid_data = fetch_covid_data(region_type, region)
+        display_covid_data(covid_data)
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
